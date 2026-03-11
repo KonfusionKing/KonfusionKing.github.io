@@ -3,100 +3,118 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>KonfusionKing</title>
+<title>KonfusionKing | About Me</title>
 <style>
+  /* Basic Reset */
   * { margin: 0; padding: 0; box-sizing: border-box; }
-  body {
-    font-family: 'Arial', sans-serif;
-    background: #0b0b2a; /* plain dark blue background */
-    color: #fff;
-    overflow: hidden;
+  html, body { height: 100%; font-family: 'Arial', sans-serif; overflow: hidden; }
+
+  /* Container for all pages */
+  #container {
+    display: flex;
+    width: 400%; /* 4 pages */
     height: 100vh;
-    position: relative;
+    transition: transform 0.7s ease;
+  }
+
+  /* Each page */
+  .page {
+    flex: 0 0 100%;
     display: flex;
     justify-content: center;
     align-items: center;
     flex-direction: column;
-  }
-
-  /* Countdown numbers */
-  #countdown {
-    font-size: 5em;
-    color: #f0e130;
-    text-shadow: 2px 2px 5px #000;
-    animation: none;
-  }
-
-  /* Rocket */
-  #rocket {
-    position: absolute;
-    width: 120px;
-    bottom: 20px;
-    transition: all 3s ease-in-out;
-  }
-
-  /* Text container */
-  #content {
-    text-align: center;
-    opacity: 0;
-    transition: opacity 2s ease;
-  }
-
-  h1 {
-    font-size: 3em;
-    margin-bottom: 20px;
-    color: #f0e130;
-    text-shadow: 2px 2px 5px #000;
-  }
-
-  p {
+    padding: 2em;
+    color: #fff;
     font-size: 1.2em;
-    max-width: 600px;
-    margin: 0 auto;
-    line-height: 1.5;
-    color: #c0c0ff;
   }
+
+  /* Page backgrounds */
+  #page1 { background: #0b0b2a; }
+  #page2 { background: #1a1a2e; }
+  #page3 { background: #2b2b45; }
+  #page4 { background: #3c3c5c; }
+
+  h1 { font-size: 3em; margin-bottom: 0.5em; color: #f0e130; }
+  p { max-width: 600px; text-align: center; line-height: 1.5; }
+
+  /* Navigation arrows */
+  .arrow {
+    position: absolute;
+    top: 50%;
+    font-size: 3em;
+    color: #f0e130;
+    cursor: pointer;
+    user-select: none;
+    transform: translateY(-50%);
+  }
+
+  #left { left: 10px; }
+  #right { right: 10px; }
+
+  /* Fade-in animation for content */
+  .fade-in {
+    opacity: 0;
+    animation: fadeIn 1s forwards;
+  }
+
+  @keyframes fadeIn {
+    to { opacity: 1; }
+  }
+
+  /* Optional swipe effect for touch devices */
 </style>
 </head>
 <body>
 
-<!-- Countdown -->
-<div id="countdown">5</div>
-
-<!-- Rocket -->
-<img id="rocket" src="rocket.jpg" alt="rocket">
-
-<!-- Main Content -->
-<div id="content">
-  <h1>Welcome to KonfusionKing</h1>
-  <p>Step into the konfusing world of kode, kreativity, and kuriosity. Explore, create, and let your imagination launch like a rocket!</p>
+<div id="container">
+  <div class="page" id="page1">
+    <h1 class="fade-in">Hi, I’m KonfusionKing</h1>
+    <p class="fade-in" style="animation-delay:0.3s;">Welcome to my personal website. Here you’ll find a bit about me, my skills, and what I enjoy creating.</p>
+  </div>
+  <div class="page" id="page2">
+    <h1 class="fade-in">Skills</h1>
+    <p class="fade-in" style="animation-delay:0.3s;">I love coding, problem-solving, and learning new technologies. HTML, CSS, JavaScript, and Python are my favorite tools.</p>
+  </div>
+  <div class="page" id="page3">
+    <h1 class="fade-in">Projects</h1>
+    <p class="fade-in" style="animation-delay:0.3s;">I build small interactive games, websites, and tools. Each project is a chance to experiment and improve my skills.</p>
+  </div>
+  <div class="page" id="page4">
+    <h1 class="fade-in">Contact</h1>
+    <p class="fade-in" style="animation-delay:0.3s;">You can reach me via email or social links. I’m always excited to collaborate or share ideas!</p>
+  </div>
 </div>
 
+<div id="left" class="arrow">&#8592;</div>
+<div id="right" class="arrow">&#8594;</div>
+
 <script>
-const countdownEl = document.getElementById('countdown');
-const rocket = document.getElementById('rocket');
-const content = document.getElementById('content');
+let currentPage = 0;
+const totalPages = 4;
+const container = document.getElementById('container');
 
-let count = 5;
-countdownEl.textContent = count;
+function showPage(index) {
+    if(index < 0) index = 0;
+    if(index >= totalPages) index = totalPages - 1;
+    currentPage = index;
+    container.style.transform = `translateX(-${100 * currentPage}%)`;
+}
 
-const countdownInterval = setInterval(() => {
-    count--;
-    if (count > 0) {
-        countdownEl.textContent = count;
-    } else {
-        clearInterval(countdownInterval);
-        countdownEl.style.display = 'none';
+document.getElementById('left').addEventListener('click', () => showPage(currentPage - 1));
+document.getElementById('right').addEventListener('click', () => showPage(currentPage + 1));
 
-        // Move rocket up
-        rocket.style.bottom = '100%';
+/* Optional: allow swipe on mobile */
+let touchStartX = null;
 
-        // Show content after rocket flies
-        setTimeout(() => {
-            content.style.opacity = 1;
-        }, 3000); // match the rocket transition
-    }
-}, 1000);
+document.addEventListener('touchstart', e => { touchStartX = e.changedTouches[0].screenX; });
+document.addEventListener('touchend', e => {
+    if(touchStartX === null) return;
+    let touchEndX = e.changedTouches[0].screenX;
+    if(touchEndX - touchStartX > 50) showPage(currentPage - 1); // swipe right
+    if(touchStartX - touchEndX > 50) showPage(currentPage + 1); // swipe left
+    touchStartX = null;
+});
 </script>
 
 </body>
