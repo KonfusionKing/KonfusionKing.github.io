@@ -5,62 +5,41 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>KonfusionKing</title>
 <style>
-  /* Reset and basic styles */
   * { margin: 0; padding: 0; box-sizing: border-box; }
   body {
     font-family: 'Arial', sans-serif;
-    background: #0b0b2a;
+    background: #0b0b2a; /* plain dark blue background */
     color: #fff;
     overflow: hidden;
     height: 100vh;
     position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
   }
 
-  /* Stars background */
-  body::before {
-    content: '';
-    position: absolute;
-    width: 200%;
-    height: 200%;
-    background: transparent url('stars.jpg') repeat;
-    animation: moveStars 60s linear infinite;
-    z-index: -1;
+  /* Countdown numbers */
+  #countdown {
+    font-size: 5em;
+    color: #f0e130;
+    text-shadow: 2px 2px 5px #000;
+    animation: none;
   }
 
-  @keyframes moveStars {
-    from { transform: translate(0, 0); }
-    to { transform: translate(-50%, -50%); }
-  }
-
-  /* Rocket animation */
+  /* Rocket */
   #rocket {
     position: absolute;
     width: 120px;
-    bottom: -150px;
-    left: -150px;
-    animation: fly 4s ease-out forwards;
-    z-index: 2;
-  }
-
-  @keyframes fly {
-    0% { bottom: -150px; left: -150px; transform: rotate(0deg) scale(0.5); }
-    50% { bottom: 50%; left: 50%; transform: rotate(20deg) scale(1); }
-    100% { bottom: 110%; left: 110%; transform: rotate(45deg) scale(1.2); }
+    bottom: 20px;
+    transition: all 3s ease-in-out;
   }
 
   /* Text container */
   #content {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
     text-align: center;
     opacity: 0;
-    animation: fadeIn 2s ease 4s forwards; /* starts after rocket */
-  }
-
-  @keyframes fadeIn {
-    to { opacity: 1; }
+    transition: opacity 2s ease;
   }
 
   h1 {
@@ -68,8 +47,6 @@
     margin-bottom: 20px;
     color: #f0e130;
     text-shadow: 2px 2px 5px #000;
-    animation: bounce 2s ease 4s forwards;
-    opacity: 0;
   }
 
   p {
@@ -78,22 +55,13 @@
     margin: 0 auto;
     line-height: 1.5;
     color: #c0c0ff;
-    animation: fadeText 2s ease 4.5s forwards;
-    opacity: 0;
-  }
-
-  @keyframes bounce {
-    0% { transform: translateY(-50%) scale(0.5); opacity: 0; }
-    60% { transform: translateY(-55%) scale(1.1); opacity: 1; }
-    100% { transform: translateY(-50%) scale(1); opacity: 1; }
-  }
-
-  @keyframes fadeText {
-    to { opacity: 1; }
   }
 </style>
 </head>
 <body>
+
+<!-- Countdown -->
+<div id="countdown">5</div>
 
 <!-- Rocket -->
 <img id="rocket" src="rocket.jpg" alt="rocket">
@@ -103,6 +71,33 @@
   <h1>Welcome to KonfusionKing</h1>
   <p>Step into the konfusing world of kode, kreativity, and kuriosity. Explore, create, and let your imagination launch like a rocket!</p>
 </div>
+
+<script>
+const countdownEl = document.getElementById('countdown');
+const rocket = document.getElementById('rocket');
+const content = document.getElementById('content');
+
+let count = 5;
+countdownEl.textContent = count;
+
+const countdownInterval = setInterval(() => {
+    count--;
+    if (count > 0) {
+        countdownEl.textContent = count;
+    } else {
+        clearInterval(countdownInterval);
+        countdownEl.style.display = 'none';
+
+        // Move rocket up
+        rocket.style.bottom = '100%';
+
+        // Show content after rocket flies
+        setTimeout(() => {
+            content.style.opacity = 1;
+        }, 3000); // match the rocket transition
+    }
+}, 1000);
+</script>
 
 </body>
 </html>
